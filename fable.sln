@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "fable", "fable.fsproj", "{3AD018AF-2FBE-4DEB-9CF2-5230B56310A1}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "fable", "fable\fable.fsproj", "{3AD018AF-2FBE-4DEB-9CF2-5230B56310A1}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "fable.tests", "..\fable.tests\fable.tests.fsproj", "{BE840108-8067-4132-A1D9-169154E54C1F}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "fable.tests", "fable.tests\fable.tests.fsproj", "{BE840108-8067-4132-A1D9-169154E54C1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
