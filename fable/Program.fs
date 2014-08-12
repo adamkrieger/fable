@@ -2,16 +2,8 @@
 // See the 'F# Tutorial' project for more help.
 
 open System
-open System.IO
 open System.Configuration
-
-let createDirectoryIfItDoesNotExist (dir)=
-    match Directory.Exists(dir) with
-    | false -> Directory.CreateDirectory(dir) |> ignore
-    | _ -> None |> ignore
-    dir
-
-let addOutputDirectorySuffix (x)= x + "_bin\\"
+open FileSystem
 
 [<EntryPoint>]
 let main argv = 
@@ -27,6 +19,7 @@ let main argv =
     use fs = new System.IO.StreamWriter(output + "index.html")
 
     fs.Write("<html></html>")
+
 
     let result = System.Console.ReadLine();
 

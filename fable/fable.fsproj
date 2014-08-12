@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="PostLoader.fs" />
     <Compile Include="IndexGenerator.fs" />
+    <Compile Include="FileSystem.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
   </ItemGroup>
