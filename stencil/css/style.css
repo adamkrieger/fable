@@ -1,10 +1,78 @@
+/********************
+	GENERAL
+********************/
+
 body{
-	background: #eee;
-	color: #333;
 	font-family: Calibri;
 }
 
+/* container for header, content, and footer */
+#main-container{
+	max-width: 940px;
+	margin: 0 auto;
+	padding: 0 5%;
+}
+
+/********************
+	HEADER
+********************/
+
 header{
-	display: block;
+	background: #ccc;
+	padding: 5px;
+	font-size: 1.25em;
+}
+
+header h1, 
+header h2{
+	margin: 0;
+}
+
+header h2{
+	font-weight: normal;
+}
+
+/********************
+	FOOTER
+********************/
+
+footer{
+	font-size: .8em;
+}
+
+/********************
+	LINKS
+********************/
+
+header a,
+footer a,
+header a:visited,
+footer a:visited{
+	text-decoration: none;
+}
+
+/********************
+	COLORS
+********************/
+
+body{
+	background: #eee;
+	color: #333;
+}
+
+a{
+	color: #242;
+}
+
+header a,
+footer a,
+header a:visited,
+footer a:visited{
+	color:#222;
+}
+
+header a:hover,
+footer a:hover{
+	color: #444;
 }
 
