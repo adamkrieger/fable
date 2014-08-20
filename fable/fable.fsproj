@@ -48,8 +48,10 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Types.fs" />
     <Compile Include="PostLoader.fs" />
     <Compile Include="IndexGenerator.fs" />
+    <Compile Include="ArchiveGenerator.fs" />
     <Compile Include="FileSystem.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />

@@ -18,8 +18,9 @@ let main argv =
     
     use fs = new System.IO.StreamWriter(output + "index.html")
 
-    fs.Write("<html></html>")
+    let fileList = IO.Directory.GetFiles root
 
+    printfn "%A" fileList
 
     let result = System.Console.ReadLine();
 

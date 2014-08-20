@@ -14,3 +14,5 @@ let generateIndex (postList) =
     let postLinkListSerialized = postLinkListSerialized postLinkList
     "<!DOCTYPE html><html><head></head><body>" + postLinkListSerialized + "</body></html>"
 
+
+
