@@ -8,7 +8,7 @@ body{
 
 /* container for header, content, and footer */
 #main-container{
-	max-width: 940px;
+	max-width: 920px;
 	margin: 0 auto;
 	padding: 0 5%;
 }
@@ -30,6 +30,10 @@ header h2{
 
 header h2{
 	font-weight: normal;
+}
+
+#logo{
+	float: left;
 }
 
 /********************
@@ -76,3 +80,28 @@ footer a:hover{
 	color: #444;
 }
 
+/*
+#main-container{
+	color:#f00;
+} meta viewport devicewidth?
+*/
+
+/* Smartphones (portrait) ----------- */
+@media screen 
+and (max-width: 320px) {
+/* Styles */
+
+}
+
+@media
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and ( min-resolution: 192dpi),
+only screen and ( min-resolution: 2dppx) {
+    /* Retina-specific stuff here */
+    #main-container{
+	color:#f00;
+	max-width: 310px;
+	margin: 0 5px;
+	padding: 0;
+}
+}
