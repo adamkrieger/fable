@@ -35,6 +35,6 @@ type ``When generating the archive`` ()=
      ``The archive output will contain the input`` ()=
         (generateArchive terribleArchiveContent postList) |> should contain "Not a very good archive."
 
-    [<Test>] member x.
-     ``Output will filter out tags`` ()=
-        (generateArchive staticArchiveContent) |> should not' (contain "{% foreach post %}")
+//    [<Test>] member x.
+//     ``Output will filter out tags`` ()=
+//        (generateArchive staticArchiveContent) |> should not' (contain "{% foreach post %}")

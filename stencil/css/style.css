@@ -2,25 +2,13 @@
 	GENERAL
 ********************/
 
-body{
-	font-family: Calibri;
-}
-
-/* container for header, content, and footer */
-#main-container{
-	max-width: 920px;
-	margin: 0 auto;
-	padding: 0 5%;
-}
 
 /********************
 	HEADER
 ********************/
 
 header{
-	background: #ccc;
 	padding: 5px;
-	font-size: 1.25em;
 }
 
 header h1, 
@@ -28,12 +16,57 @@ header h2{
 	margin: 0;
 }
 
-header h2{
-	font-weight: normal;
+.headerblock{
+	display: inline-block;
+	padding: 5px;
+	vertical-align: top;
 }
 
-#logo{
-	float: left;
+.headerblock h1{
+	margin: -8px 0 0 0;
+	padding: 0;
+}
+
+.headerblock h2{
+	padding: 0 0 0 1px;
+}
+
+nav{
+	float: right;
+}
+
+nav ul{
+	margin: 5px;
+}
+
+nav li{
+	display: inline-block;
+}
+
+nav li a{
+	padding: 3px 7px;
+	border-radius: 4px;
+}
+
+/********************
+	SECTION
+********************/
+
+section{
+	clear: both;
+	max-width: 920px;
+	margin: 0 auto;
+	padding: 0 5%;
+}
+
+.page-title{
+	margin: 0;
+	padding: 0;
+}
+
+.page-title h3{
+	margin: 0;
+	padding: 10px 0 5px;
 }
 
 /********************
@@ -41,7 +74,9 @@ header h2{
 ********************/
 
 footer{
-	font-size: .8em;
+	text-align: center;
+	clear: both;
+	padding: 10px;
 }
 
 /********************
@@ -60,7 +95,7 @@ footer a:visited{
 ********************/
 
 body{
-	background: #eee;
+	background: #ddd;
 	color: #333;
 }
 
@@ -75,10 +110,50 @@ footer a:visited{
 	color:#222;
 }
 
+nav a{
+	background: #bbb;
+}
+
+header, nav{
+	background: #aaa;
+}
+
+header h1,
+header h2{
+	color: #444;
+}
+
 header a:hover,
 footer a:hover{
 	color: #444;
 }
+
+nav a:hover{
+	background: #444;
+	color: #ddd;
+}
+
+
+/********************
+	FONTS
+********************/
+
+body{
+	font-family: 'Open Sans', sans-serif;
+}
+
+header{
+	font-size: 1.25em;
+}
+
+header h2{
+	font-weight: normal;
+}
+
+footer{
+	font-size: .8em;
+}
+
 
 /*
 #main-container{
@@ -99,9 +174,5 @@ only screen and ( min-resolution: 192dpi),
 only screen and ( min-resolution: 2dppx) {
     /* Retina-specific stuff here */
     #main-container{
-	color:#f00;
-	max-width: 310px;
-	margin: 0 5px;
-	padding: 0;
 }
 }
