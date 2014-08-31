@@ -1,8 +1,7 @@
-﻿// Learn more about F# at http://fsharp.net
-// See the 'F# Tutorial' project for more help.
-
+﻿open fable
 open System
 open System.Configuration
+open System.IO
 open FileSystem
 
 [<EntryPoint>]
@@ -16,13 +15,26 @@ let main argv =
                     addOutputDirectorySuffix |> 
                     createDirectoryIfItDoesNotExist
     
-    use fs = new System.IO.StreamWriter(output + "index.html")
-
     let fileList = IO.Directory.GetFiles root
 
     printfn "%A" fileList
+    
+    let archiveReader = new StreamReader(fileList.[0]) 
+    let indexReader = new StreamReader(fileList.[1])
+    let layoutReader = new StreamReader(root + "\\_themes\\default\\default.html")
 
+    let tagParser = new TagParser(layoutReader.ReadToEnd())
 
+    let indexOutput = tagParser.compile(indexReader.ReadToEnd())
+    let archiveOuput = tagParser.compile(archiveReader.ReadToEnd())
+
+    let indexWriter = new StreamWriter(output + "\\index.html")
+    let archiveWriter = new StreamWriter(output + "\\archive.html")
+
+    indexWriter.Write(indexOutput)
+    indexWriter.Close()
+    archiveWriter.Write(archiveOuput)
+    archiveWriter.Close()
 
     let result = System.Console.ReadLine();
 

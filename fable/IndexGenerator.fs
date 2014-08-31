@@ -1,18 +1,11 @@
 ﻿module Fable.IndexGenerator
 
-let postLink (postName) =
-    "<a href=\"\">" + postName + "</a>"
+open System
+open System.IO
+open FParsec
 
-let postLinkList (postList : string list) =
-    postList |> List.map(fun postName -> postLink postName)
-
-let postLinkListSerialized (postLinkList) =
-    postLinkList |> List.reduce(fun a b -> a + b)
-
-let generateIndex (postList) =
-    let postLinkList = postLinkList postList
-    let postLinkListSerialized = postLinkListSerialized postLinkList
-    "<!DOCTYPE html><html><head></head><body>" + postLinkListSerialized + "</body></html>"
-
-
+let resolveResult result =
+        match result with
+        | Success(result,_,_) -> result
+        | Failure(errorMsg,_,_) -> raise(Exception(errorMsg))
 

@@ -4,47 +4,46 @@ open FParsec.CharParsers
 open FParsec
 open System
 
-type TagParser(content:string) =
+type TagParser (layout:string) =
+    let _content = ""
 
-    let contentTag =
+    let contentKeywordParser =
         pstring "content"
         
-    let fableTagChoice = 
+    let fableKeywordParser content = 
         [
-            contentTag |>> (fun tag -> content)
+            contentKeywordParser |>> (fun tag -> content)
         ]
         |> choice
 
-    let startTag =
+    let startTagParser =
         pstring "[#"
 
-    let endTag = 
+    let endTagParser = 
         pstring "#]"
 
-    let fableTag = 
-        startTag >>. spaces >>. (fableTagChoice) .>> spaces .>> endTag
+    let fableTagParser content = 
+        startTagParser >>. spaces >>. (fableKeywordParser content) .>> spaces .>> endTagParser
 
-    let parseUntilTag =
-        charsTillString "[#" false 100
+    let upToTagStartParser =
+        charsTillString "[#" false 1000
 
-    let parseRouting fableParser =
-        attempt fableParser <|>
-        attempt parseUntilTag <|>
-        restOfLine true
+    let parseRouting content =
+        [
+            attempt (fableTagParser content)
+            attempt startTagParser
+            attempt upToTagStartParser
+            restOfLine true
+        ]
+        |> choice
 
-    //overhead functions for test purposes
     let resolveResult result =
         match result with
         | Success(result,_,_) -> result
         | Failure(errorMsg,_,_) -> raise(Exception(errorMsg))
 
-//    let dummyTest =
-//        let x = resolveResult (run startTag "[#")
-//        resolveResult (run (compile "") "")
-
-//    let test parser input =
-//        resolveResult (run parser input)
-
-    member this.compile =
-        let fableParser = fableTagChoice
-        manyTill (parseRouting fableParser) eof
+    member this.compile content =
+        let _content = content
+        let fableParser = manyTill (parseRouting content) eof
+        let result = run fableParser layout
+        resolveResult result |> List.reduce (fun a b -> a + "\n" + b)
