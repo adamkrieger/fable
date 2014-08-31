@@ -3,6 +3,7 @@ open System
 open System.Configuration
 open System.IO
 open FileSystem
+open PageBuilder
 
 [<EntryPoint>]
 let main argv = 
@@ -19,22 +20,13 @@ let main argv =
 
     printfn "%A" fileList
     
-    let archiveReader = new StreamReader(fileList.[0]) 
-    let indexReader = new StreamReader(fileList.[1])
-    let layoutReader = new StreamReader(root + "\\_themes\\default\\default.html")
+    let pages = fileList |> mapFilesToPages output
 
-    let tagParser = new TagParser(layoutReader.ReadToEnd())
+    let defaultLayoutTemplate = getDefaultLayoutTemplate root
 
-    let indexOutput = tagParser.compile(indexReader.ReadToEnd())
-    let archiveOuput = tagParser.compile(archiveReader.ReadToEnd())
+    let tagParser = new TagParser(defaultLayoutTemplate)
 
-    let indexWriter = new StreamWriter(output + "\\index.html")
-    let archiveWriter = new StreamWriter(output + "\\archive.html")
-
-    indexWriter.Write(indexOutput)
-    indexWriter.Close()
-    archiveWriter.Write(archiveOuput)
-    archiveWriter.Close()
+    let outFiles = pages |> Array.map (fun page -> buildPages tagParser page)
 
     let result = System.Console.ReadLine();
 

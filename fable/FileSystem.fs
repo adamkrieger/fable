@@ -8,4 +8,9 @@ let createDirectoryIfItDoesNotExist (dir)=
     | _ -> None |> ignore
     dir
 
-let addOutputDirectorySuffix (x)= x + "_bin\\"
+let addOutputDirectorySuffix dir = Path.Combine(dir, "bin")
+
+let getDefaultLayoutTemplate rootDir =
+    let pathToLayout = Path.Combine(rootDir, "themes", "default", "layout.html")
+    use stream = new StreamReader(pathToLayout)
+    stream.ReadToEnd()

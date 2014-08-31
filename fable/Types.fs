@@ -1,4 +1,4 @@
-﻿namespace Fable
+﻿namespace fable
 
 open System
 
@@ -8,3 +8,7 @@ type Post = {
     content : string;
 }
 
+type Page = {
+    sourcePath : string;
+    destinationPath : string;
+}

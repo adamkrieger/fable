@@ -1,10 +1,9 @@
 ﻿namespace fable.tests
 
-open Fable
+open fable
 open NUnit.Framework
 open FsUnit
 open Foq
-open Fable.ArchiveGenerator
 open System
 
 [<TestFixture>]
@@ -30,11 +29,3 @@ type ``When generating the archive`` ()=
             content = "The third post."
         }
     ]
-
-    [<Test>] member x.
-     ``The archive output will contain the input`` ()=
-        (generateArchive terribleArchiveContent postList) |> should contain "Not a very good archive."
-
-//    [<Test>] member x.
-//     ``Output will filter out tags`` ()=
-//        (generateArchive staticArchiveContent) |> should not' (contain "{% foreach post %}")
