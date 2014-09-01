@@ -59,9 +59,10 @@
     <Compile Include="TagParser.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="PostLoader.fs" />
-    <Compile Include="IndexGenerator.fs" />
     <Compile Include="FileSystem.fs" />
     <Compile Include="PageBuilder.fs" />
+    <Compile Include="StyleBuilder.fs" />
+    <Compile Include="ImageBuilder.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <None Include="packages.config" />

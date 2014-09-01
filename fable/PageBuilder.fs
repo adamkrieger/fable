@@ -30,4 +30,3 @@ let buildPages (tagParser:TagParser) pageInfo =
     use writer = new StreamWriter(outputPath)
     writer.Write(output)
     
-    true
