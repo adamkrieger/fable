@@ -1,11 +1,22 @@
-﻿namespace fable
+﻿namespace Fable
 
 open FParsec.CharParsers
 open FParsec
 open System
+open ParserHelpers
 
 type TagParser (layout:string) =
     let _content = ""
+
+    //Fable tags in EBNF
+    // fableTagKeyword = "content";
+    // nbws = { " " | "\t" }
+    // openSquare = "["
+    // 
+    // fableTag = "[#" + nbws + fableTagKeyword + nbws + "#]";
+    // nonFableTag = (nonOpenSquare + { anyChar })
+    //               | (openSquare + nonHash + { anyChar })
+    // line = { fableTag | nonFableTag }
 
     let contentKeywordParser =
         pstring "content"
@@ -36,11 +47,6 @@ type TagParser (layout:string) =
             restOfLine true
         ]
         |> choice
-
-    let resolveResult result =
-        match result with
-        | Success(result,_,_) -> result
-        | Failure(errorMsg,_,_) -> raise(Exception(errorMsg))
 
     member this.compile content =
         let _content = content

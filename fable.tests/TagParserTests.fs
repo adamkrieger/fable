@@ -2,7 +2,7 @@
 
 open NUnit.Framework
 open FsUnit
-open fable
+open Fable
 
 [<TestFixture>]
 type ``When parsing page content`` () =

@@ -63,9 +63,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PostLoaderTests.fs" />
-    <Compile Include="File1.fs" />
     <Compile Include="TagParserTests.fs" />
     <Compile Include="PageBuilderTests.fs" />
+    <Compile Include="CommonMark.Tests.fs" />
     <None Include="Script.fsx" />
     <None Include="packages.config" />
     <None Include="app.config" />

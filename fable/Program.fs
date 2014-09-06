@@ -1,9 +1,7 @@
-﻿open fable
+﻿open Fable
 open System
 open System.Configuration
-open System.IO
 open FileSystem
-open PageBuilder
 
 [<EntryPoint>]
 let main argv = 
@@ -16,43 +14,10 @@ let main argv =
                  |> addOutputDirectorySuffix 
                  |> createDirectoryIfItDoesNotExist
     
-    let htmlFilesInRoot = IO.Directory.GetFiles(rootDir, "*.html") 
+    do PageBuilder.buildAllPages rootDir outputDir
 
-    printfn "%A" htmlFilesInRoot
-    
-    let pages = htmlFilesInRoot 
-                |> mapFilesToPages outputDir
+    do StyleBuilder.buildStyle rootDir outputDir
 
-    let defaultLayoutTemplate = getDefaultLayoutTemplate rootDir
-
-    let tagParser = new TagParser(defaultLayoutTemplate)
-
-    do pages 
-       |> Array.map (fun page -> buildPages tagParser page)
-       |> ignore
-
-    let sourceCssDir = rootDir
-                       |> addThemesDir
-                       |> addSelectedThemeDir
-                       |> addStyleDir
-                       |> createDirectoryIfItDoesNotExist
-
-    let outputCssDir = outputDir
-                       |> addStyleDir
-                       |> createDirectoryIfItDoesNotExist
-
-    do StyleBuilder.buildStyle sourceCssDir outputCssDir
-
-    let sourceImageDir = rootDir
-                         |> addImageDir
-                         |> createDirectoryIfItDoesNotExist
-
-    let outputImageDir = outputDir
-                         |> addImageDir
-                         |> createDirectoryIfItDoesNotExist
-
-    do ImageBuilder.buildImages sourceImageDir outputImageDir
-
-    let result = System.Console.ReadLine();
+    do ImageBuilder.buildImages rootDir outputDir
 
     0 // return an integer exit code

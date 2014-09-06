@@ -1,12 +1,21 @@
 ﻿module ImageBuilder
 
-open fable
+open Fable
 open FileSystem
 open System.IO
 
-let buildImages sourceFolder destinationFolder =
+let buildImages rootDir outputDir =
+
+    let sourceImageDir = rootDir
+                         |> addImageDir
+                         |> createDirectoryIfItDoesNotExist
+
+    let outputImageDir = outputDir
+                         |> addImageDir
+                         |> createDirectoryIfItDoesNotExist
+
     let imageFiles = 
-        Directory.GetFiles(sourceFolder, "*.*")
+        Directory.GetFiles(sourceImageDir, "*.*")
         |> Array.filter (fun path -> path.EndsWith(".jpeg")
                                      || path.EndsWith(".jpg")
                                      || path.EndsWith(".gif")
@@ -16,7 +25,7 @@ let buildImages sourceFolder destinationFolder =
         |> Array.map (fun path -> { 
                                      sourcePath=path;
                                      destinationPath=
-                                        Path.Combine(destinationFolder, (Path.GetFileName path));
+                                        Path.Combine(outputImageDir, (Path.GetFileName path));
                                   }
                      )
 

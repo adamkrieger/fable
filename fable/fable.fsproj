@@ -56,7 +56,9 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ParserHelpers.fs" />
     <Compile Include="TagParser.fs" />
+    <Compile Include="CommonMarkParser.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="PostLoader.fs" />
     <Compile Include="FileSystem.fs" />

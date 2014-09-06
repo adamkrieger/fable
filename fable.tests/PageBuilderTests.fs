@@ -1,4 +1,4 @@
-﻿namespace fable.tests
+﻿namespace fable.tests.PageBuilderTests
 
 open fable
 open PageBuilder
@@ -8,7 +8,7 @@ open FsUnit
 [<TestFixture>]
 type ``When the input file and output directory are known`` () =
 
-    let destinationPath = transformSourcePathToDestination "C:\\test\\blog\\input.html" "C:\\output\\whatever"
+    let destinationPath = transformSourcePathToDestination "C:\\output\\whatever" "C:\\test\\blog\\input.html"
 
     [<Test>] member x.
      ``The output path is the combined value`` () =

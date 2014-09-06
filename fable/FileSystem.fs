@@ -1,6 +1,6 @@
 ﻿module FileSystem
 
-open fable
+open Fable
 open System.IO
 open System.Configuration
 

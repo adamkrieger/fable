@@ -1,4 +1,4 @@
-﻿namespace fable
+﻿namespace Fable
 
 open System
 

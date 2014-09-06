@@ -1,7 +1,8 @@
 ﻿module PageBuilder
 
-open fable
+open Fable
 open System.IO
+open FileSystem
 
 let transformSourcePathToDestination destinationRoot filePath =
     let filename = Path.GetFileName filePath
@@ -20,7 +21,10 @@ let mapFilesToPages outputDirectoryRoot filenameArray =
     |> Array.map (fun filename -> getPageType outputDirectoryRoot filename)
 
 let buildPages (tagParser:TagParser) pageInfo =
-    let {sourcePath=inputPath;destinationPath=outputPath} = pageInfo
+    let {
+            sourcePath = inputPath; 
+            destinationPath = outputPath
+        } = pageInfo
     
     use reader = new StreamReader(inputPath)
     let input = reader.ReadToEnd()
@@ -29,4 +33,20 @@ let buildPages (tagParser:TagParser) pageInfo =
 
     use writer = new StreamWriter(outputPath)
     writer.Write(output)
+
+let buildAllPages rootDir outputDir =
+    let htmlFilesInRoot = Directory.GetFiles(rootDir, "*.html") 
+
+    printfn "%A" htmlFilesInRoot
+    
+    let pages = htmlFilesInRoot 
+                |> mapFilesToPages outputDir
+
+    let defaultLayoutTemplate = getDefaultLayoutTemplate rootDir
+
+    let tagParser = new TagParser(defaultLayoutTemplate)
+
+    do pages 
+       |> Array.map (fun page -> buildPages tagParser page)
+       |> ignore
     
