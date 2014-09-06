@@ -18,6 +18,8 @@ let addImageDir dir = Path.Combine(dir, "img")
 
 let addThemesDir dir = Path.Combine(dir, "themes")
 
+let addPostsDir dir = Path.Combine(dir, "posts")
+
 let addSelectedThemeDir dir =
     Path.Combine(dir, ConfigurationManager.AppSettings.Item("theme"))
 
@@ -33,3 +35,9 @@ let copySourceToDestination pageRecord =
         } = pageRecord
 
     File.Copy(source, destination, true)
+
+let getExtension fileName = 
+    Path.GetExtension fileName
+
+let getAllFilesInDirectory path =
+    Directory.GetFiles(path, "*.*")

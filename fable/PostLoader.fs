@@ -1,12 +1,18 @@
 ﻿module Fable.PostLoader
 
-let filterFileName (name : string) =
-    let x = name.LastIndexOf('.')
-    let fileExt = name.Substring(x)
-    
-    match fileExt with
-    | ".md" -> true
-    | _ -> false
+open FileSystem
 
-let getPostNames (getFilesInDirectory) =
-    getFilesInDirectory |> List.filter(fun x -> filterFileName x)
+let filterPostFiles fileList =
+    fileList |> List.filter (fun x -> 
+                                match getExtension x with
+                                | ".html" -> true
+                                | ".md" -> true
+                                |_ -> false)
+
+let loadPosts rootDir =
+    
+    let sourcePostDir = rootDir
+                        |> addPostsDir
+                        |> createDirectoryIfItDoesNotExist
+
+    1

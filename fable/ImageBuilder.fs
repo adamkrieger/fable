@@ -15,7 +15,7 @@ let buildImages rootDir outputDir =
                          |> createDirectoryIfItDoesNotExist
 
     let imageFiles = 
-        Directory.GetFiles(sourceImageDir, "*.*")
+        getAllFilesInDirectory sourceImageDir
         |> Array.filter (fun path -> path.EndsWith(".jpeg")
                                      || path.EndsWith(".jpg")
                                      || path.EndsWith(".gif")

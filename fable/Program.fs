@@ -13,6 +13,10 @@ let main argv =
     let outputDir = rootDir 
                  |> addOutputDirectorySuffix 
                  |> createDirectoryIfItDoesNotExist
+
+    let postContent = PostLoader.loadPosts rootDir
+
+    //do PostBuilder.buildPosts postContent outputDir
     
     do PageBuilder.buildAllPages rootDir outputDir
 
