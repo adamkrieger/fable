@@ -1,41 +1,40 @@
 ﻿module PageBuilder
 
 open Fable
-open System.IO
 open FileSystem
 
 let transformSourcePathToDestination destinationRoot filePath =
-    let filename = Path.GetFileName filePath
-    Path.Combine(destinationRoot, filename)
+    let fileName = getFileName filePath
+    combinePathWithFileName destinationRoot fileName
 
 let getPageType destinationRoot filePath =
     let destinationPath = transformSourcePathToDestination destinationRoot filePath
 
     {
-        sourcePath = filePath; 
-        destinationPath = destinationPath 
+        Page.SourcePath = filePath; 
+        Page.DestinationPath = destinationPath 
     }
 
 let mapFilesToPages outputDirectoryRoot filenameArray =
     filenameArray 
     |> Array.map (fun filename -> getPageType outputDirectoryRoot filename)
 
+
+
 let buildPages (tagParser:TagParser) pageInfo =
     let {
-            sourcePath = inputPath; 
-            destinationPath = outputPath
+            Page.SourcePath = inputPath; 
+            Page.DestinationPath = outputPath
         } = pageInfo
     
-    use reader = new StreamReader(inputPath)
-    let input = reader.ReadToEnd()
+    let input = getFileContents inputPath
 
     let output = tagParser.compile input
 
-    use writer = new StreamWriter(outputPath)
-    writer.Write(output)
+    writeToFile outputPath output
 
 let buildAllPages rootDir outputDir =
-    let htmlFilesInRoot = Directory.GetFiles(rootDir, "*.html") 
+    let htmlFilesInRoot = getHtmlFilesInDirectory rootDir
 
     printfn "%A" htmlFilesInRoot
     

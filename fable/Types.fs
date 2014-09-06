@@ -2,13 +2,28 @@
 
 open System
 
-type Post = {
-    date : DateTime;
-    title : string;
-    content : string;
-}
+module Post =
+    type T = {
+                    Date : DateTime;
+                    Title : string;
+                    Content : string;
+                }
 
-type Page = {
-    sourcePath : string;
-    destinationPath : string;
-}
+    let create date title content = 
+        {
+            Date = date;
+            Title = title;
+            Content = content
+        }
+
+module Page =
+    type T = {
+        SourcePath : string;
+        DestinationPath : string;
+    }
+
+    let create sourcePath destinationPath =
+        {
+            SourcePath = sourcePath;
+            DestinationPath = destinationPath
+        }

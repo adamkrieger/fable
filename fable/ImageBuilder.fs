@@ -23,8 +23,8 @@ let buildImages rootDir outputDir =
                                      || path.EndsWith(".ico")
         )
         |> Array.map (fun path -> { 
-                                     sourcePath=path;
-                                     destinationPath=
+                                     Page.SourcePath = path;
+                                     Page.DestinationPath =
                                         Path.Combine(outputImageDir, (Path.GetFileName path));
                                   }
                      )
