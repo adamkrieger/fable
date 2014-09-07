@@ -24,11 +24,18 @@ type ``When the posts directory file list is filtered`` ()=
 
 [<TestFixture>]
 type ``When the post content is pulled from the file`` ()=
-    let fileName = "2014-08-13 Cat Post.md"
-    let fileContents = (fun x->  "This is a post about cats.")
-
-    let post = assemblePost fileName fileContents
+    let fileName = "C:\\temp\\posts\\2014-08-13 Cat Post.md"
+    let fileContents = (fun x->  " [# title: I love cats #]\n" +
+                                 "This is a post about cats.")
 
     [<Test>] member x.
      ``The date should be pulled from the file name`` ()=
-        post.Date |> should equal (DateTime.Parse("2014-08-13"))
+        (assemblePost fileName fileContents).Date |> should equal (DateTime.Parse("2014-08-13"))
+
+    [<Test>] member x.
+     ``The title is set via the title tag`` ()=
+        (assemblePost fileName fileContents).Title |> should equal ("I love cats")
+
+    [<Test>] member x.
+     ``The content is set as expected`` ()=
+        (assemblePost fileName fileContents).Content |> should equal (" \nThis is a post about cats.")
