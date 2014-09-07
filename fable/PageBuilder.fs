@@ -3,49 +3,41 @@
 open Fable
 open FileSystem
 
-let transformSourcePathToDestination destinationRoot filePath =
-    let fileName = getFileName filePath
-    combinePathWithFileName destinationRoot fileName
+let getLayoutFilePath rootDir themeName =
+    combinePaths [| rootDir; "themes"; "default"; "layout.html" |]
 
-let getPageType destinationRoot filePath =
-    let destinationPath = transformSourcePathToDestination destinationRoot filePath
+let getDefaultLayoutTemplate rootDir =
+    getLayoutFilePath rootDir "default" 
+        |> getFileContents 
 
-    {
-        Page.SourcePath = filePath; 
-        Page.DestinationPath = destinationPath 
-    }
-
-let mapFilesToPages outputDirectoryRoot filenameArray =
-    filenameArray 
-    |> Array.map (fun filename -> getPageType outputDirectoryRoot filename)
-
-
-
-let buildPages (tagParser:TagParser) pageInfo =
-    let {
-            Page.SourcePath = inputPath; 
-            Page.DestinationPath = outputPath
-        } = pageInfo
+let createLayoutParser pageLayout =
+    new LayoutParser(pageLayout)
     
-    let input = getFileContents inputPath
-
-    let output = tagParser.compile input
-
-    writeToFile outputPath output
-
-let buildAllPages rootDir outputDir =
-    let htmlFilesInRoot = getHtmlFilesInDirectory rootDir
-
-    printfn "%A" htmlFilesInRoot
+let compilePage fileName contents (parser:LayoutParser) destinationRoot =
     
-    let pages = htmlFilesInRoot 
-                |> mapFilesToPages outputDir
+    let destinationPath = combinePath destinationRoot fileName
 
-    let defaultLayoutTemplate = getDefaultLayoutTemplate rootDir
+    let output = parser.compile contents
 
-    let tagParser = new TagParser(defaultLayoutTemplate)
+    Page.create fileName destinationPath output
 
-    do pages 
-       |> Array.map (fun page -> buildPages tagParser page)
+let buildAllPages rootDir destinationDir =
+    
+    let pageLayout = getDefaultLayoutTemplate rootDir
+
+    let parser = createLayoutParser pageLayout
+
+    let htmlFiles = getHtmlFilesInDirectory rootDir
+
+    let compiledPages = Array.map (fun htmlFilePath -> 
+                                            compilePage 
+                                                (getFileName htmlFilePath)
+                                                (getFileContents htmlFilePath)
+                                                parser 
+                                                destinationDir
+                                   )
+                                   htmlFiles
+
+    do compiledPages
+       |> Array.map (fun page -> writeToFile page.DestinationPath page.Content)
        |> ignore
-    

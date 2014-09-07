@@ -18,11 +18,10 @@ let buildStyle rootDir outputDir =
 
     let styleSheetFiles = 
         Directory.GetFiles(sourceCssDir, "*.css")
-        |> Array.map (fun path -> { 
-                                     Page.SourcePath = path;
-                                     Page.DestinationPath =
-                                        Path.Combine(outputCssDir, (Path.GetFileName path));
-                                  }
+        |> Array.map (fun path -> ( 
+                                     path,
+                                     Path.Combine(outputCssDir, (Path.GetFileName path))
+                                  )
                      )
 
     do styleSheetFiles 

@@ -18,23 +18,20 @@ let addImageDir dir = Path.Combine(dir, "img")
 
 let addThemesDir dir = Path.Combine(dir, "themes")
 
+let addDefaultDir dir = Path.Combine(dir, "default")
+
 let addPostsDir dir = Path.Combine(dir, "posts")
 
 let addSelectedThemeDir dir =
     Path.Combine(dir, ConfigurationManager.AppSettings.Item("theme"))
 
-let getDefaultLayoutTemplate rootDir =
-    let pathToLayout = Path.Combine(rootDir, "themes", "default", "layout.html")
-    use stream = new StreamReader(pathToLayout)
-    stream.ReadToEnd()
 
-let copySourceToDestination pageRecord =
-    let {
-            Page.SourcePath = source;
-            Page.DestinationPath = destination
-        } = pageRecord
 
-    File.Copy(source, destination, true)
+let copySourceToDestination source_destination =
+    File.Copy(
+        (fst source_destination), 
+        (snd source_destination), 
+        true)
 
 let getExtension fileName = 
     Path.GetExtension fileName
@@ -56,5 +53,8 @@ let writeToFile (filePath:string) (contents:string) =
     use writer = new StreamWriter(filePath)
     writer.Write(contents)
 
-let combinePathWithFileName path fileName =
-    Path.Combine(path,fileName)
+let combinePath path addition =
+    Path.Combine(path, addition)
+
+let combinePaths paths =
+    Path.Combine(paths)

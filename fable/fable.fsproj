@@ -57,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ParserHelpers.fs" />
-    <Compile Include="TagParser.fs" />
+    <Compile Include="LayoutParser.fs" />
     <Compile Include="CommonMarkParser.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="FileSystem.fs" />

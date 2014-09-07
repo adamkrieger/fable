@@ -1,4 +1,4 @@
-﻿namespace fable.tests
+﻿namespace Fable.Tests.PostLoaderTests
 
 open NUnit.Framework
 open FsUnit
@@ -8,19 +8,19 @@ open System
         
 [<TestFixture>]
 type ``When the posts directory file list is filtered`` ()=
-    let getFilesInDirectory = [
+    let getFilesInDirectory = [|
                                 "C:\\temp\\posts\\test1.md";
                                 "C:\\temp\\posts\\test2.html";
                                 "C:\\temp\\posts\\test3.txt"
-                              ]
+                              |]
     let postNames = filterPostFiles getFilesInDirectory
 
     [<Test>] member x.
      ``Non-md or html files should be filtered out`` ()=
-        postNames |> should equal [
+        postNames |> should equal [|
                                     "C:\\temp\\posts\\test1.md";
                                     "C:\\temp\\posts\\test2.html"
-                                  ]
+                                  |]
 
 [<TestFixture>]
 type ``When the post content is pulled from the file`` ()=

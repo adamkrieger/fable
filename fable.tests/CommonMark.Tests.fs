@@ -1,4 +1,4 @@
-﻿namespace  fable.tests.CommonMarkTests
+﻿namespace Fable.Tests.CommonMarkTests
 
 open NUnit.Framework
 open FsUnit

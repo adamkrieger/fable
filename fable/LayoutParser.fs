@@ -5,7 +5,7 @@ open FParsec
 open System
 open ParserHelpers
 
-type TagParser (layout:string) =
+type LayoutParser (layout:string) =
     let _content = ""
 
     //Fable tags in EBNF

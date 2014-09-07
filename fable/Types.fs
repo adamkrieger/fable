@@ -18,12 +18,12 @@ module Post =
 
 module Page =
     type T = {
-        SourcePath : string;
         DestinationPath : string;
+        Content : string;
     }
 
-    let create sourcePath destinationPath =
+    let create fileName destinationPath content =
         {
-            SourcePath = sourcePath;
-            DestinationPath = destinationPath
+            DestinationPath = destinationPath;
+            Content = content;
         }
