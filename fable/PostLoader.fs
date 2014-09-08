@@ -85,10 +85,10 @@ let getPostOutputFileName (title:string) =
 let getPostOutputDir rootDir (publishDate:DateTime) =
     combinePaths [|
                     rootDir;
-                    "posts";
-                    publishDate.ToString("yyyy");
-                    publishDate.ToString("MM");
-                    publishDate.ToString("dd")
+//                    "posts";
+//                    publishDate.ToString("yyyy");
+//                    publishDate.ToString("MM");
+//                    publishDate.ToString("dd")
                  |]
         |> createDirectoryIfItDoesNotExist
 
