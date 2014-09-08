@@ -19,14 +19,10 @@ let compilePage fileName contents (parser:LayoutParser) destinationRoot =
 
     let output = parser.compile contents
 
-    Page.create fileName destinationPath output
+    Page.create destinationPath output
 
-let buildAllPages rootDir destinationDir =
+let buildAllPages rootDir destinationDir (parser:LayoutParser) =
     
-    let pageLayout = getDefaultLayoutTemplate rootDir
-
-    let parser = createLayoutParser pageLayout
-
     let htmlFiles = getHtmlFilesInDirectory rootDir
 
     let compiledPages = Array.map (fun htmlFilePath -> 
@@ -40,4 +36,13 @@ let buildAllPages rootDir destinationDir =
 
     do compiledPages
        |> Array.map (fun page -> writeToFile page.DestinationPath page.Content)
+       |> ignore
+
+let applyLayoutAndWritePages (pages:PreLayoutPage.T[]) (parser:LayoutParser) =
+    do pages 
+       |> Array.map (fun page -> 
+                                writeToFile
+                                    page.DestinationPath
+                                    (parser.compile page.PreLayoutContent)
+                       )
        |> ignore

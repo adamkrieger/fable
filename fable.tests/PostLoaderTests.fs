@@ -39,3 +39,17 @@ type ``When the post content is pulled from the file`` ()=
     [<Test>] member x.
      ``The content is set as expected`` ()=
         (assemblePost fileName fileContents).Content |> should equal (" \nThis is a post about cats.")
+
+[<TestFixture>]
+type ``When preparing to write the post file`` ()=
+    let publishDate = DateTime.Parse("2014-09-15")
+    let postTitle = "A post about cats: thing and such"
+    let rootOutputDir = "C:\\temp\\"
+
+    [<Test>] member x.
+     ``The output filename must be sanitized`` ()=
+        getPostOutputFileName postTitle |> should equal "A_post_about_cats_thing_and_such.html"
+
+    [<Test>] member x.
+     ``The output directory is nested by date`` ()=
+        getPostOutputDir rootOutputDir publishDate |> should equal "C:\\temp\\posts\\2014\\09\\15"

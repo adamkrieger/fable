@@ -22,8 +22,21 @@ module Page =
         Content : string;
     }
 
-    let create fileName destinationPath content =
+    let create destinationPath content =
         {
             DestinationPath = destinationPath;
             Content = content;
+        }
+
+module PreLayoutPage =
+    type T = 
+        {
+            DestinationPath : string;
+            PreLayoutContent : string;
+        }
+
+    let create destinationPath content =
+        {
+            DestinationPath = destinationPath;
+            PreLayoutContent = content;
         }

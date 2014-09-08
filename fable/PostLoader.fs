@@ -76,7 +76,23 @@ let assemblePost filePath getFileContents =
     
     Post.create date title content
 
-let loadPosts rootDir =
+let getPostOutputFileName (title:string) =
+    let saniTitle = title.Replace(' ','_')
+    let saniTitle = saniTitle.Replace(':','_')
+    let saniTitle = saniTitle.Replace("__","_")
+    saniTitle + ".html"
+
+let getPostOutputDir rootDir (publishDate:DateTime) =
+    combinePaths [|
+                    rootDir;
+                    "posts";
+                    publishDate.ToString("yyyy");
+                    publishDate.ToString("MM");
+                    publishDate.ToString("dd")
+                 |]
+        |> createDirectoryIfItDoesNotExist
+
+let loadPosts rootDir destinationRootDir =
     
     let sourcePostDir = rootDir
                         |> addPostsDir
@@ -86,4 +102,15 @@ let loadPosts rootDir =
 
     let postFiles = filterPostFiles filesInSourceDir
 
-    Array.map (fun postFilePath -> assemblePost postFilePath getFileContents) postFiles
+    let posts = 
+        postFiles 
+        |> Array.map (fun postFilePath -> assemblePost postFilePath getFileContents)
+
+    posts |> Array.map (fun post -> PreLayoutPage.create 
+                                        (
+                                            combinePath 
+                                                (getPostOutputDir destinationRootDir post.Date) 
+                                                (getPostOutputFileName post.Title)
+                                        ) 
+                                        post.Content
+                        )
