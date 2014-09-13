@@ -24,13 +24,7 @@ type CommonMarkParser () =
         ]
         |> choice
 
-    let horizontalRuleSequence =
-        [
-            pstring "---"
-            pstring "___"
-            pstring "***"
-        ]
-        |> choice
+
 
     let preprocessor input =
         [
@@ -41,21 +35,72 @@ type CommonMarkParser () =
             |> iterateParserUntilEndAndResolve <| input
 
     let horizontalRule input =
+        let horizontalRuleSequence =
+                zeroToThreeSpaces 
+            >>.
+                ([
+                    pstring "---"
+                    pstring "___"
+                    pstring "***"
+                ]
+                |> choice)
+            .>>
+                restOfLine true
+
         [
-            attempt zeroToThreeSpaces >>. horizontalRuleSequence .>> restOfLine true
+            attempt horizontalRuleSequence
                 |>> (fun x -> "<hr />")
             restOfLine true
         ]
         |> choice
             |> iterateParserUntilEndAndResolve <| input
 
+    let wrapInTag tag input =
+        "<" + tag + ">" + input + "</ " + tag + ">"
+
     let atxHeader input =
         let h1 = pstring "#"
         let h2 = pstring "##"
+        let h3 = pstring "###"
+        let h4 = pstring "####"
+        let h5 = pstring "#####"
+        let h6 = pstring "######"
+
+        let attemptHeader hN =
+            attempt hN >>. space >>. restOfLine true
 
         [
-            attempt h1 >>. space >>. restOfLine true
-                |>> (fun x -> "<h1>" + x + "</h1>")
+            attemptHeader h6
+                |>> wrapInTag "h6"
+            attemptHeader h5
+                |>> wrapInTag "h5"
+            attemptHeader h4
+                |>> wrapInTag "h4"
+            attemptHeader h3
+                |>> wrapInTag "h3"
+            attemptHeader h2
+                |>> wrapInTag "h2"
+            attemptHeader h1
+                |>> wrapInTag "h1"
+            restOfLine true
+        ]
+        |> choice
+            |> iterateParserUntilEndAndResolve <| input
+
+    let fencedCodeBlock input =
+        let fence = pstring "```"
+        
+        let codeBlock = 
+                fence
+            >>.
+                manyCharsTill anyChar (lookAhead fence)
+            .>>
+                fence
+
+        [
+            attempt codeBlock
+                |>> wrapInTag "code"
+                |>> wrapInTag "pre"
             restOfLine true
         ]
         |> choice
@@ -70,6 +115,8 @@ type CommonMarkParser () =
         let res = horizontalRule res |> rejoinLines
 
         let res = atxHeader res |> rejoinLines
+
+        let res = fencedCodeBlock res |> rejoinLines
 
         res
 

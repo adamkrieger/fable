@@ -33,4 +33,16 @@ type ``When parsing a leaf block`` () =
      ``One hash followed by words results in an h1 tag`` () =
         "# the header"
             |> parser.compile
-            |> should equal "<h1>the header</h1>"
+            |> should equal "<h1>the header</ h1>"
+
+    [<Test>] member x.
+     ``An SQL code block results in an attributed code block`` () =
+        "```sql\n SELECT \n\t*\nFROM\n\ttbl_people\n```"
+            |> parser.compile
+            |> should equal "<pre><code class=\"language-sql\"> SELECT\n\tFROM\n\ttbl_people\n"
+
+    [<Test>] member x.
+     ``A code block results in a code block`` () =
+        "```\nstuff\n```"
+            |> parser.compile
+            |> should equal "<pre><code>\nstuff\n</ code></ pre>"
