@@ -7,11 +7,19 @@ type CommonMarkParser () =
 
     let iterator parser = manyTill parser eof
 
+    let space = pstring " "
+
+    let iterateParserUntilEndAndResolve parser input =
+        parser
+        |> iterator
+            |> run <| input
+                |> resolveResult
+
     let zeroToThreeSpaces = 
         [
-            pstring "   "
-            pstring "  "
-            pstring " "
+            space >>. space >>. space
+            space >>. space
+            space
             pstring ""
         ]
         |> choice
@@ -25,34 +33,43 @@ type CommonMarkParser () =
         |> choice
 
     let preprocessor input =
-        let tabToSpacesParser = 
-            [
-                attempt (tab |>> (fun x -> "    "))
-                anyChar |>> (fun x -> x.ToString())
-            ]
-            |> choice
-            |> iterator
-
-        (run tabToSpacesParser input) 
-            |> resolveResult
+        [
+            attempt (tab |>> (fun x -> "    "))
+            anyChar |>> (fun x -> x.ToString())
+        ]
+        |> choice
+            |> iterateParserUntilEndAndResolve <| input
 
     let horizontalRule input =
-        let horizontalRuleParser =
-            [
-                attempt zeroToThreeSpaces >>. horizontalRuleSequence .>> restOfLine true
-                    |>> (fun x -> "<hr />")
-                restOfLine true
-            ]
-            |> choice
-            |> iterator
+        [
+            attempt zeroToThreeSpaces >>. horizontalRuleSequence .>> restOfLine true
+                |>> (fun x -> "<hr />")
+            restOfLine true
+        ]
+        |> choice
+            |> iterateParserUntilEndAndResolve <| input
 
-        (run horizontalRuleParser input)
-            |> resolveResult
+    let atxHeader input =
+        let h1 = pstring "#"
+        let h2 = pstring "##"
+
+        [
+            attempt h1 >>. space >>. restOfLine true
+                |>> (fun x -> "<h1>" + x + "</h1>")
+            restOfLine true
+        ]
+        |> choice
+            |> iterateParserUntilEndAndResolve <| input
 
     member this.compile input = 
-        let res = preprocessor input |> List.reduce (fun a b -> a + b)
+        let rejoin = List.reduce (fun a b -> a + b)
+        let rejoinLines = List.reduce (fun a b -> a + "\n" + b)
 
-        let res = horizontalRule res |> List.reduce (fun a b -> a + b)
+        let res = preprocessor input |> rejoin
+
+        let res = horizontalRule res |> rejoinLines
+
+        let res = atxHeader res |> rejoinLines
 
         res
 

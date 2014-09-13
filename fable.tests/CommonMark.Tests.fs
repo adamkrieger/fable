@@ -8,11 +8,11 @@ open Fable
 type ``When the content contains tabs`` () =
 
     let parser = new CommonMarkParser()
-    let output = parser.compile "This is some \tcontent\nAnd\tsome more.\n"
+    let output = parser.compile "This is some \tcontent\nAnd\tsome more."
 
     [<Test>] member x.
      ``The tabs should be replaced with four spaces`` () =
-        output |> should equal "This is some     content\nAnd    some more.\n"
+        output |> should equal "This is some     content\nAnd    some more."
 
 [<TestFixture>]
 type ``When parsing a leaf block`` () =
@@ -28,3 +28,9 @@ type ``When parsing a leaf block`` () =
         "___"
             |> parser.compile
             |> should equal "<hr />"
+
+    [<Test>] member x.
+     ``One hash followed by words results in an h1 tag`` () =
+        "# the header"
+            |> parser.compile
+            |> should equal "<h1>the header</h1>"
