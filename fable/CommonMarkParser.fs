@@ -5,13 +5,15 @@ open ParserHelpers
 
 type CommonMarkParser () =
 
-    let iterator parser = manyTill parser eof
-
     let space = pstring " "
+    let nothingAtAll = pstring ""
 
+    let parseManyTillEof parse = 
+        parse |> manyTill <| eof
+    
     let iterateParserUntilEndAndResolve parser input =
         parser
-        |> iterator
+        |> parseManyTillEof
             |> run <| input
                 |> resolveResult
 
@@ -20,11 +22,9 @@ type CommonMarkParser () =
             space >>. space >>. space
             space >>. space
             space
-            pstring ""
+            nothingAtAll
         ]
         |> choice
-
-
 
     let preprocessor input =
         [
@@ -56,7 +56,7 @@ type CommonMarkParser () =
             |> iterateParserUntilEndAndResolve <| input
 
     let wrapInTag tag input =
-        "<" + tag + ">" + input + "</ " + tag + ">"
+        "<" + tag + ">" + input + "</" + tag + ">"
 
     let atxHeader input =
         let h1 = pstring "#"
@@ -87,19 +87,37 @@ type CommonMarkParser () =
         |> choice
             |> iterateParserUntilEndAndResolve <| input
 
+    let codeBlockLanguage =
+        [
+            pstring "sql"
+            pstring "ruby"
+        ]
+        |> choice
+
+    let wrapInCodeTag input =
+        match fst input with
+        | "" -> "<code>" + (snd input) + "</code>"
+        |_ -> "<code class=\"language-" + (fst input) + "\">" + (snd input) + "</code>"
+
     let fencedCodeBlock input =
         let fence = pstring "```"
         
         let codeBlock = 
                 fence
             >>.
+                ([
+                    skipMany space >>. codeBlockLanguage .>> restOfLine true
+                    nothingAtAll
+                ]
+                |> choice)
+            .>>.
                 manyCharsTill anyChar (lookAhead fence)
             .>>
                 fence
 
         [
             attempt codeBlock
-                |>> wrapInTag "code"
+                |>> wrapInCodeTag
                 |>> wrapInTag "pre"
             restOfLine true
         ]
