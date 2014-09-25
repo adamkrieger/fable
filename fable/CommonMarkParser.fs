@@ -94,10 +94,10 @@ type CommonMarkParser () =
         ]
         |> choice
 
-    let wrapInCodeTag input =
-        match fst input with
-        | "" -> "<code>" + (snd input) + "</code>"
-        |_ -> "<code class=\"language-" + (fst input) + "\">" + (snd input) + "</code>"
+    let wrapInCodeTag lang code =
+        match lang with
+        | "" -> wrapInTag "code" code
+        |_ -> "<code class=\"language-" + lang + "\">" + code + "</code>"
 
     let fencedCodeBlock input =
         let fence = pstring "```"
@@ -117,7 +117,7 @@ type CommonMarkParser () =
 
         [
             attempt codeBlock
-                |>> wrapInCodeTag
+                |>> (fun output -> wrapInCodeTag (fst output) (snd output))
                 |>> wrapInTag "pre"
             restOfLine true
         ]
