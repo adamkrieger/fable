@@ -37,12 +37,21 @@ type ``When parsing a leaf block`` () =
 
     [<Test>] member x.
      ``An SQL code block results in an attributed code block`` () =
-        "```sql\n SELECT\n\t*\nFROM\n\ttbl_people\n```"
+        @"```sql and this should get ignored
+SELECT
+    *
+FROM
+    tbl_people
+```"
             |> parser.compile
-            |> should equal "<pre><code class=\"language-sql\"> SELECT\n    *\nFROM\n    tbl_people\n</code></pre>"
+            |> should equal @"<pre><code class=""language-sql"">SELECT
+    *
+FROM
+    tbl_people
+</code></pre>" 
 
     [<Test>] member x.
      ``A code block results in a code block`` () =
         "```\nstuff\n```"
             |> parser.compile
-            |> should equal "<pre><code>\nstuff\n</code></pre>"
+            |> should equal "<pre><code>stuff\n</code></pre>"

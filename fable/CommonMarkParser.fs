@@ -87,17 +87,20 @@ type CommonMarkParser () =
         |> choice
             |> iterateParserUntilEndAndResolve <| input
 
-    let codeBlockLanguage =
-        [
-            pstring "sql"
-            pstring "ruby"
-        ]
-        |> choice
-
     let wrapInCodeTag lang code =
         match lang with
         | "" -> wrapInTag "code" code
         |_ -> "<code class=\"language-" + lang + "\">" + code + "</code>"
+
+    let oneWord =
+        manyCharsTill anyChar
+            (lookAhead
+                ([
+                    pchar ' '
+                    newline
+                ]
+                |> choice)
+            )
 
     let fencedCodeBlock input =
         let fence = pstring "```"
@@ -106,7 +109,7 @@ type CommonMarkParser () =
                 fence
             >>.
                 ([
-                    skipMany space >>. codeBlockLanguage .>> restOfLine true
+                    oneWord .>> restOfLine true
                     nothingAtAll
                 ]
                 |> choice)
