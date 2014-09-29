@@ -3,13 +3,17 @@
 open NUnit.Framework
 open FsUnit
 open Fable
+open System.IO
+open Fable.Tests.TestHelpers
 
 [<TestFixture>]
 type ``When getting the default layout file path`` () =
 
-    let rootDir = "C:\\temp\\site"
+    let rootDir = Path.Combine(sysRoot, @"temp", @"site")
     let themeName = "default"
 
     [<Test>] member x.
      ``The content tag should be replaced with content`` () =
-        (PageBuilder.getLayoutFilePath rootDir themeName) |> should equal "C:\\temp\\site\\themes\\default\\layout.html"
+        (LayoutLoader.getLayoutFilePath rootDir themeName) 
+        |> should equal 
+            (Path.Combine(sysRoot, @"temp", @"site", @"themes", @"default", @"layout.html"))

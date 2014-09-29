@@ -3,13 +3,6 @@
 open Fable
 open FileSystem
 
-let getLayoutFilePath rootDir themeName =
-    combinePaths [| rootDir; "themes"; "default"; "layout.html" |]
-
-let getDefaultLayoutTemplate rootDir =
-    getLayoutFilePath rootDir "default" 
-        |> getFileContents 
-
 let createLayoutParser pageLayout =
     new LayoutParser(pageLayout)
     

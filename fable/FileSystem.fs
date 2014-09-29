@@ -10,18 +10,6 @@ let createDirectoryIfItDoesNotExist (dir)=
     | _ -> None |> ignore
     dir
 
-let addOutputDirectorySuffix dir = Path.Combine(dir, "bin")
-
-let addStyleDir dir = Path.Combine(dir, "css")
-
-let addImageDir dir = Path.Combine(dir, "img")
-
-let addThemesDir dir = Path.Combine(dir, "themes")
-
-let addDefaultDir dir = Path.Combine(dir, "default")
-
-let addPostsDir dir = Path.Combine(dir, "posts")
-
 let addSelectedThemeDir dir =
     Path.Combine(dir, ConfigurationManager.AppSettings.Item("theme"))
 

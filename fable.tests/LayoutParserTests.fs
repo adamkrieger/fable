@@ -12,3 +12,4 @@ type ``When parsing page content`` () =
     [<Test>] member x.
      ``The content tag should be replaced with content`` () =
         parser.compile "foo!\nbar!!" |> should equal "<html>\n\nfoo!\nbar!!\n\n\n</html>"
+

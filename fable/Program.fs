@@ -10,11 +10,12 @@ let main argv =
     let rootDir = ConfigurationManager.AppSettings.Item("rootDirectory") 
                 |> createDirectoryIfItDoesNotExist
 
-    let outputDir = rootDir 
-                 |> addOutputDirectorySuffix 
-                 |> createDirectoryIfItDoesNotExist
+    let outputDir = 
+        combinePaths [| rootDir; "bin" |]
+        |> createDirectoryIfItDoesNotExist
 
-    let pageLayout = PageBuilder.getDefaultLayoutTemplate rootDir
+    let pageLayout = LayoutLoader.getDefaultLayoutTemplate rootDir
+
     let parser = PageBuilder.createLayoutParser pageLayout
 
     let postContent = PostLoader.loadPosts rootDir outputDir

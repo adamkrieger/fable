@@ -53,6 +53,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestHelpers.fs" />
     <Compile Include="LayoutTests.fs" />
     <Compile Include="PostLoaderTests.fs" />
     <Compile Include="LayoutParserTests.fs" />

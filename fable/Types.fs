@@ -40,3 +40,18 @@ module PreLayoutPage =
             DestinationPath = destinationPath;
             PreLayoutContent = content;
         }
+
+module PreLayoutPost = 
+    type T = 
+        {
+            FileTitle : string;
+            DestinationPath : string;
+            PreLayoutContent : string;
+        }
+
+    let create fileTitle destinationPath content = 
+        {
+            FileTitle = fileTitle;
+            DestinationPath = destinationPath;
+            PreLayoutContent = content;
+        }

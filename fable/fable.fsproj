@@ -58,6 +58,7 @@
     <Compile Include="CommonMarkParser.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="FileSystem.fs" />
+    <Compile Include="LayoutLoader.fs" />
     <Compile Include="PostLoader.fs" />
     <Compile Include="PageBuilder.fs" />
     <Compile Include="StyleBuilder.fs" />

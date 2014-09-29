@@ -6,6 +6,7 @@ open Fable.PostLoader
 open Fable
 open System
 open System.IO
+open Fable.Tests.TestHelpers
         
 [<TestFixture>]
 type ``When the posts directory file list is filtered`` ()=
@@ -43,9 +44,12 @@ type ``When the post content is pulled from the file`` ()=
 
 [<TestFixture>]
 type ``When preparing to write the post file`` ()=
+
     let publishDate = DateTime.Parse("2014-09-15")
     let postTitle = "A post about cats: thing and such"
-    let rootOutputDir = "C:\\temp\\"
+
+    let rootOutputDir = 
+        Path.Combine(sysRoot, @"temp")
 
     [<Test>] member x.
      ``The output filename must be sanitized`` ()=
@@ -53,4 +57,6 @@ type ``When preparing to write the post file`` ()=
 
     [<Test>] member x.
      ``The output directory is nested by date`` ()=
-        getPostOutputDir rootOutputDir publishDate |> should equal "C:\\temp\\posts\\2014\\09\\15"
+        getPostOutputDir rootOutputDir publishDate 
+        |> should equal 
+            (Path.Combine(sysRoot, @"temp", @"posts", @"2014", @"09", @"15"))

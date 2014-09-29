@@ -85,18 +85,17 @@ let getPostOutputFileName (title:string) =
 let getPostOutputDir rootDir (publishDate:DateTime) =
     combinePaths [|
                     rootDir;
-//                    "posts";
-//                    publishDate.ToString("yyyy");
-//                    publishDate.ToString("MM");
-//                    publishDate.ToString("dd")
+                    "posts";
+                    publishDate.ToString("yyyy");
+                    publishDate.ToString("MM");
+                    publishDate.ToString("dd")
                  |]
-        |> createDirectoryIfItDoesNotExist
 
 let loadPosts rootDir destinationRootDir =
     
-    let sourcePostDir = rootDir
-                        |> addPostsDir
-                        |> createDirectoryIfItDoesNotExist
+    let sourcePostDir = 
+        (combinePaths [| rootDir; "posts" |])
+            |> createDirectoryIfItDoesNotExist
 
     let filesInSourceDir = getAllFilesInDirectory sourcePostDir
 
@@ -109,7 +108,8 @@ let loadPosts rootDir destinationRootDir =
     posts |> Array.map (fun post -> PreLayoutPage.create 
                                         (
                                             combinePath 
-                                                (getPostOutputDir destinationRootDir post.Date) 
+                                                (getPostOutputDir destinationRootDir post.Date
+                                                    |> createDirectoryIfItDoesNotExist) 
                                                 (getPostOutputFileName post.Title)
                                         ) 
                                         post.Content

@@ -6,15 +6,13 @@ open FileSystem
 
 let buildStyle rootDir outputDir =
 
-    let sourceCssDir = rootDir
-                       |> addThemesDir
-                       |> addSelectedThemeDir
-                       |> addStyleDir
-                       |> createDirectoryIfItDoesNotExist
+    let sourceCssDir = 
+        (combinePaths [| rootDir; "themes"; "default"; "css" |])
+            |> createDirectoryIfItDoesNotExist
 
-    let outputCssDir = outputDir
-                       |> addStyleDir
-                       |> createDirectoryIfItDoesNotExist
+    let outputCssDir = 
+        (combinePaths [| outputDir; "css" |])
+            |> createDirectoryIfItDoesNotExist
 
     let styleSheetFiles = 
         Directory.GetFiles(sourceCssDir, "*.css")

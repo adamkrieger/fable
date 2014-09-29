@@ -6,13 +6,13 @@ open System.IO
 
 let buildImages rootDir outputDir =
 
-    let sourceImageDir = rootDir
-                         |> addImageDir
-                         |> createDirectoryIfItDoesNotExist
+    let sourceImageDir = 
+        combinePaths [| rootDir; "img" |]
+        |> createDirectoryIfItDoesNotExist
 
-    let outputImageDir = outputDir
-                         |> addImageDir
-                         |> createDirectoryIfItDoesNotExist
+    let outputImageDir = 
+        combinePaths [| outputDir; "img" |]
+        |> createDirectoryIfItDoesNotExist
 
     let imageFiles = 
         getAllFilesInDirectory sourceImageDir
