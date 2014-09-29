@@ -131,13 +131,17 @@ type CommonMarkParser () =
         let rejoin = List.reduce (fun a b -> a + b)
         let rejoinLines = List.reduce (fun a b -> a + "\n" + b)
 
-        let res = preprocessor input |> rejoin
+        let res = preprocessor input 
+                    |> rejoin
 
-        let res = horizontalRule res |> rejoinLines
+        let res = horizontalRule res 
+                    |> rejoinLines
 
-        let res = atxHeader res |> rejoinLines
+        let res = atxHeader res 
+                    |> rejoinLines
 
-        let res = fencedCodeBlock res |> rejoinLines
+        let res = fencedCodeBlock res 
+                    |> rejoinLines
 
         res
 

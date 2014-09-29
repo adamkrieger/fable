@@ -5,26 +5,27 @@ open FsUnit
 open Fable.PostLoader
 open Fable
 open System
+open System.IO
         
 [<TestFixture>]
 type ``When the posts directory file list is filtered`` ()=
     let getFilesInDirectory = [|
-                                "C:\\temp\\posts\\test1.md";
-                                "C:\\temp\\posts\\test2.html";
-                                "C:\\temp\\posts\\test3.txt"
+                                Path.Combine(@"C:\", "temp", "posts","test1.md")
+                                Path.Combine(@"C:\","temp","posts","test2.html")
+                                Path.Combine(@"C:\","temp","posts","test3.txt")
                               |]
     let postNames = filterPostFiles getFilesInDirectory
 
     [<Test>] member x.
      ``Non-md or html files should be filtered out`` ()=
         postNames |> should equal [|
-                                    "C:\\temp\\posts\\test1.md";
-                                    "C:\\temp\\posts\\test2.html"
+                                    Path.Combine(@"C:\","temp","posts","test1.md")
+                                    Path.Combine(@"C:\","temp","posts","test2.html")
                                   |]
 
 [<TestFixture>]
 type ``When the post content is pulled from the file`` ()=
-    let fileName = "C:\\temp\\posts\\2014-08-13 Cat Post.md"
+    let fileName = Path.Combine(@"C:\","temp","posts","2014-08-13 Cat Post.md")
     let fileContents = (fun x->  " [# title: I love cats #]\n" +
                                  "This is a post about cats.")
 

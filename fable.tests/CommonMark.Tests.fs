@@ -44,14 +44,14 @@ FROM
     tbl_people
 ```"
             |> parser.compile
-            |> should equal @"<pre><code class=""language-sql"">SELECT
+            |> should equal (@"<pre><code class=""language-sql"">SELECT
     *
 FROM
     tbl_people
-</code></pre>" 
+</code></pre>".Replace("\r\n","\n"))
 
     [<Test>] member x.
      ``A code block results in a code block`` () =
         "```\nstuff\n```"
             |> parser.compile
-            |> should equal "<pre><code>stuff\n</code></pre>"
+            |> should equal ("<pre><code>stuff\n</code></pre>".Replace("\r\n","\n"))
