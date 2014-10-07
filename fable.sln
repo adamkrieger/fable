@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
+# Visual Studio 2012
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "fable", "fable\fable.fsproj", "{3AD018AF-2FBE-4DEB-9CF2-5230B56310A1}"
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "fable", "fable\fable.fsproj", "{3AD018AF-2FBE-4DEB-9CF2-5230B56310A1}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "fable.tests", "fable.tests\fable.tests.fsproj", "{BE840108-8067-4132-A1D9-169154E54C1F}"
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "fable.tests", "fable.tests\fable.tests.fsproj", "{BE840108-8067-4132-A1D9-169154E54C1F}"
+EndProject
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "Fable.FileSystem", "Fable.FileSystem\Fable.FileSystem.fsproj", "{6855AFCC-8D74-4B48-B0D3-2E05DDC3CBAE}"
+EndProject
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "Fable.CommonMark", "Fable.CommonMark\Fable.CommonMark.fsproj", "{3DF87A22-12C0-46F9-893C-74760DF48D79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +21,21 @@ Global
 		{3AD018AF-2FBE-4DEB-9CF2-5230B56310A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AD018AF-2FBE-4DEB-9CF2-5230B56310A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AD018AF-2FBE-4DEB-9CF2-5230B56310A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DF87A22-12C0-46F9-893C-74760DF48D79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DF87A22-12C0-46F9-893C-74760DF48D79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DF87A22-12C0-46F9-893C-74760DF48D79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DF87A22-12C0-46F9-893C-74760DF48D79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6855AFCC-8D74-4B48-B0D3-2E05DDC3CBAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6855AFCC-8D74-4B48-B0D3-2E05DDC3CBAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6855AFCC-8D74-4B48-B0D3-2E05DDC3CBAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6855AFCC-8D74-4B48-B0D3-2E05DDC3CBAE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BE840108-8067-4132-A1D9-169154E54C1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BE840108-8067-4132-A1D9-169154E54C1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE840108-8067-4132-A1D9-169154E54C1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE840108-8067-4132-A1D9-169154E54C1F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = fable\fable.fsproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

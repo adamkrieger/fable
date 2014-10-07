@@ -7,7 +7,7 @@ open Fable
 [<TestFixture>]
 type ``When the content contains tabs`` () =
 
-    let parser = new CommonMarkParser()
+    let parser = new CommonMark.CommonMarkParser()
     let output = parser.compile "This is some \tcontent\nAnd\tsome more."
 
     [<Test>] member x.
@@ -17,7 +17,7 @@ type ``When the content contains tabs`` () =
 [<TestFixture>]
 type ``When parsing a leaf block`` () =
 
-    let parser = new CommonMarkParser()
+    let parser = new CommonMark.CommonMarkParser()
 
 //    A line consisting of 0-3 spaces of indentation, 
 //    followed by a sequence of three or more matching -, _, or * characters, 

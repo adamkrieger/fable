@@ -67,6 +67,10 @@
       <Name>fable</Name>
       <Project>{3AD018AF-2FBE-4DEB-9CF2-5230B56310A1}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Fable.CommonMark\Fable.CommonMark.fsproj">
+      <Project>{3DF87A22-12C0-46F9-893C-74760DF48D79}</Project>
+      <Name>Fable.CommonMark</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

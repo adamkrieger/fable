@@ -2,20 +2,6 @@
 
 open System
 
-module Post =
-    type T = {
-                    Date : DateTime;
-                    Title : string;
-                    Content : string;
-                }
-
-    let create date title content = 
-        {
-            Date = date;
-            Title = title;
-            Content = content
-        }
-
 module Page =
     type T = {
         DestinationPath : string;
@@ -41,17 +27,34 @@ module PreLayoutPage =
             PreLayoutContent = content;
         }
 
-module PreLayoutPost = 
+module PostFile = 
     type T = 
         {
             FileTitle : string;
-            DestinationPath : string;
-            PreLayoutContent : string;
+            DatePosted : DateTime;
+            Content : string;
         }
 
-    let create fileTitle destinationPath content = 
+    let create fileTitle datePosted content = 
         {
             FileTitle = fileTitle;
-            DestinationPath = destinationPath;
-            PreLayoutContent = content;
+            DatePosted = datePosted;
+            Content = content;
+        }
+
+module Post =
+    type T = 
+        {
+            DatePosted : DateTime;
+            Title : string;
+            Content : string;
+            PathRelative : string;
+        }
+
+    let create datePosted title content pathRelative = 
+        {
+            DatePosted = datePosted;
+            Title = title;
+            Content = content;
+            PathRelative = pathRelative;
         }

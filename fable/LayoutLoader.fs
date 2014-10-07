@@ -1,11 +1,11 @@
 ﻿module Fable.LayoutLoader
 
-open FileSystem
+    open FileSystem
 
-let getLayoutFilePath rootDir themeName =
-    combinePaths [| rootDir; "themes"; "default"; "layout.html" |]
+    let getLayoutFilePath rootDir themeName =
+        combinePaths [| rootDir; "themes"; "default"; "layout.html" |]
 
-let getDefaultLayoutTemplate rootDir =
-    getLayoutFilePath rootDir "default" 
-        |> getFileContents 
+    let getDefaultLayoutTemplate rootDir =
+        getLayoutFilePath rootDir "default" 
+            |> getFileContents 
 

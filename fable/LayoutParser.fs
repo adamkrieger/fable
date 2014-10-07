@@ -19,7 +19,7 @@ type LayoutParser (layout:string) =
     // line = { fableTag | nonFableTag }
 
     let contentKeywordParser =
-        pstring "content"
+        str "content"
         
     let fableKeywordParser content = 
         [
@@ -28,10 +28,10 @@ type LayoutParser (layout:string) =
         |> choice
 
     let startTagParser =
-        pstring "[#"
+        str "[#"
 
     let endTagParser = 
-        pstring "#]"
+        str "#]"
 
     let fableTagParser content = 
         startTagParser >>. spaces >>. (fableKeywordParser content) .>> spaces .>> endTagParser

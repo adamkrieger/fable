@@ -1,7 +1,7 @@
-﻿open Fable
-open System
+﻿open System
 open System.Configuration
 open FileSystem
+open Fable
 
 [<EntryPoint>]
 let main argv = 
@@ -20,7 +20,10 @@ let main argv =
 
     let postContent = PostLoader.loadPosts rootDir outputDir
 
-    do PageBuilder.applyLayoutAndWritePages postContent parser
+    let postPages = postContent 
+                    |> Array.map (fun post -> PageBuilder.buildPageFromPost rootDir post)
+
+    do PageBuilder.applyLayoutAndWritePages postPages parser
 
     //do PostBuilder.buildPosts postContent outputDir
     

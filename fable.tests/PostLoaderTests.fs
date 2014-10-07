@@ -26,37 +26,35 @@ type ``When the posts directory file list is filtered`` ()=
 
 [<TestFixture>]
 type ``When the post content is pulled from the file`` ()=
-    let fileName = Path.Combine(@"C:\","temp","posts","2014-08-13 Cat Post.md")
+    let filePath = Path.Combine(@"C:\","temp","posts","2014-08-13 Cat Post.md")
     let fileContents = (fun x->  " [# title: I love cats #]\n" +
                                  "This is a post about cats.")
 
     [<Test>] member x.
      ``The date should be pulled from the file name`` ()=
-        (assemblePost fileName fileContents).Date |> should equal (DateTime.Parse("2014-08-13"))
-
-    [<Test>] member x.
-     ``The title is set via the title tag`` ()=
-        (assemblePost fileName fileContents).Title |> should equal ("I love cats")
-
-    [<Test>] member x.
-     ``The content is set as expected`` ()=
-        (assemblePost fileName fileContents).Content |> should equal (" \nThis is a post about cats.")
+        snd (Fable.PostFunctions.parsePostFileName filePath) |> should equal (DateTime.Parse("2014-08-13"))
 
 [<TestFixture>]
-type ``When preparing to write the post file`` ()=
+type ``When getting a post's output filename`` ()=
 
-    let publishDate = DateTime.Parse("2014-09-15")
     let postTitle = "A post about cats: thing and such"
 
     let rootOutputDir = 
         Path.Combine(sysRoot, @"temp")
 
     [<Test>] member x.
-     ``The output filename must be sanitized`` ()=
-        getPostOutputFileName postTitle |> should equal "A_post_about_cats_thing_and_such.html"
+     ``The filename must be sanitized`` ()=
+        Fable.PostFunctions.buildOutputFileName postTitle |> should equal "A_post_about_cats_thing_and_such.html"
+
+[<TestFixture>]
+type ``When getting a post's output path`` ()=
+
+    let publishDate = DateTime.Parse("2014-09-15")
+    let samplePostFile = PostFile.create "The_post_title.html" publishDate "blah blah, cats are great."
 
     [<Test>] member x.
      ``The output directory is nested by date`` ()=
-        getPostOutputDir rootOutputDir publishDate 
+        Fable.PostFunctions.buildOutputPath samplePostFile 
         |> should equal 
-            (Path.Combine(sysRoot, @"temp", @"posts", @"2014", @"09", @"15"))
+            (Path.Combine(@"posts", @"2014", @"09", @"15"
+                            , "The_post_title.html"))

@@ -1,4 +1,4 @@
-﻿namespace Fable
+﻿namespace Fable.CommonMark
 
 open FParsec
 open ParserHelpers
@@ -7,9 +7,6 @@ type CommonMarkParser () =
 
     let space = pstring " "
     let nothingAtAll = pstring ""
-
-    let parseManyTillEof parse = 
-        parse |> manyTill <| eof
     
     let iterateParserUntilEndAndResolve parser input =
         parser
