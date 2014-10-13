@@ -45,16 +45,3 @@ type ``When getting a post's output filename`` ()=
     [<Test>] member x.
      ``The filename must be sanitized`` ()=
         Fable.PostFunctions.buildOutputFileName postTitle |> should equal "A_post_about_cats_thing_and_such.html"
-
-[<TestFixture>]
-type ``When getting a post's output path`` ()=
-
-    let publishDate = DateTime.Parse("2014-09-15")
-    let samplePostFile = PostFile.create "The_post_title.html" publishDate "blah blah, cats are great."
-
-    [<Test>] member x.
-     ``The output directory is nested by date`` ()=
-        Fable.PostFunctions.buildOutputPath samplePostFile 
-        |> should equal 
-            (Path.Combine(@"posts", @"2014", @"09", @"15"
-                            , "The_post_title.html"))

@@ -34,14 +34,31 @@
     let buildPageFromPost rootDir (post:Post.T) =
 
         PreLayoutPage.create
-            (combinePaths [| rootDir; post.PathRelative |])
+            post.FileName
             post.Content
 
-    let applyLayoutAndWritePages (pages:PreLayoutPage.T[]) (parser:LayoutParser) =
+    let fitContentInLayout (page:PreLayoutPage.T) (parser:LayoutParser) =
+        parser.compile page.PreLayoutContent
+
+    let getOutputPath (page:PreLayoutPage.T) outputRoot =
+        let outputPath =
+            outputRoot
+                |> createDirectoryIfItDoesNotExist
+
+        combinePath
+            outputPath
+            page.FileName
+
+    let writePage path content =
+        printfn "%A" ("Writing file: " + path)
+
+        writeToFile path content
+
+    let applyLayoutAndWritePages (pages:PreLayoutPage.T[]) (parser:LayoutParser) outputRoot =
         do pages 
            |> Array.map (fun page -> 
-                                    writeToFile
-                                        page.DestinationPath
-                                        (parser.compile page.PreLayoutContent)
+                                    writePage
+                                        (getOutputPath page outputRoot)
+                                        (fitContentInLayout page parser)
                            )
            |> ignore

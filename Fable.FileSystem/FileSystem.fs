@@ -12,8 +12,6 @@
     let addSelectedThemeDir dir =
         Path.Combine(dir, ConfigurationManager.AppSettings.Item("theme"))
 
-
-
     let copySourceToDestination source_destination =
         File.Copy(
             (fst source_destination), 

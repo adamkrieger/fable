@@ -4,12 +4,12 @@ open FParsec.CharParsers
 open FParsec
 open ParserHelpers
 
-type ContentParser (content:string) =
+type ContentParser () =
 
     let allCharsUntil tag =
         manyCharsTill anyChar (lookAhead (str tag))
 
-    member this.getTitleFromContent =
+    member this.getTitle content =
 
         let parser =
             allCharsUntil "[#"
@@ -25,7 +25,7 @@ type ContentParser (content:string) =
         | Success(output,_,_) -> output
         | Failure(msg,_,_) -> "Untitled"
 
-    member this.sanitizeContentForOutput =
+    member this.sanitizeForOutput content =
         
         let parser =
             [

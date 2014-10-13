@@ -5,14 +5,18 @@
     open Fable
 
 
-    let buildOutputFileName (fileTitle:string) =
+    let buildSanitizedHtmlFileName (fileTitle:string) =
         let saniTitle = fileTitle.Trim()
                             .Replace(' ','_')
+                            .Replace(@"'","")
                             .Replace(':','_')
                             .Replace("__","_")
         saniTitle + ".html"
 
-    let parsePostFileName (postFileName:string) =
+    type BlogPostFileName = string
+    type PublishDate = DateTime
+
+    let parsePostFileName (fileNameBuilder:string -> string) (postFileName:string) =
 
         let name = FileSystem.getFileNameWithoutExtension postFileName
 
@@ -22,17 +26,29 @@
         let datePosted = DateTime.Parse(dateAsString)
 
         let postName = name.Substring(indexOfFirstSpace, (name.Length - indexOfFirstSpace))
-                       |> buildOutputFileName
+                       |> fileNameBuilder
 
-        postName, datePosted
+        (postName:BlogPostFileName), (datePosted:PublishDate)
 
+    let parseFileNameAndSanitize fileName =
 
-    let buildOutputPath (post:PostFile.T) =
-        FileSystem.combinePaths 
-                    [|
-                        "posts";
-                        post.DatePosted.ToString("yyyy");
-                        post.DatePosted.ToString("MM");
-                        post.DatePosted.ToString("dd");
-                        post.FileTitle
-                    |]
+        //curry the parser with a filename sanitizer
+        let fileNameParser = 
+                buildSanitizedHtmlFileName |> parsePostFileName
+
+        fileName |> fileNameParser
+
+    let parseFableContent (content:UnparsedContent) = 
+
+        let contentParser = new ContentParser()
+
+        let title, parsed =
+            match content with
+            | UnparsedCommonMark x -> 
+                (contentParser.getTitle x)
+                , (CommonMarkContent (contentParser.sanitizeForOutput x))
+            | UnparsedHtml x ->
+                (contentParser.getTitle x)
+                , (HtmlContent (contentParser.sanitizeForOutput x))
+
+        title, parsed

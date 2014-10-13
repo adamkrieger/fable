@@ -16,18 +16,25 @@ let main argv =
 
     let pageLayout = LayoutLoader.getDefaultLayoutTemplate rootDir
 
-    let parser = PageBuilder.createLayoutParser pageLayout
+    let layoutParser = PageBuilder.createLayoutParser pageLayout
 
-    let postContent = PostLoader.loadPosts rootDir outputDir
+    let commonMarkParser = new CommonMark.CommonMarkParser()
 
-    let postPages = postContent 
-                    |> Array.map (fun post -> PageBuilder.buildPageFromPost rootDir post)
+    let formatPages = PostBuilder.buildBlogPostPage layoutParser commonMarkParser
 
-    do PageBuilder.applyLayoutAndWritePages postPages parser
+    let outputPathCurry = FileSystem.combinePath outputDir
 
-    //do PostBuilder.buildPosts postContent outputDir
+    do (PostLoader.readBlogPostFiles rootDir)
+                    |> Array.map (fun x -> x |> PostBuilder.buildBlogPostPartial)
+                    |> Array.map (fun x -> x |> formatPages)
+                    |> Array.map (fun x -> FileSystem.writeToFile
+                                                (x.FileNameForWeb |> outputPathCurry)
+                                                x.HtmlPage) 
+                    |> ignore
+
+
     
-    do PageBuilder.buildAllPages rootDir outputDir parser
+    do PageBuilder.buildAllPages rootDir outputDir layoutParser
 
     do StyleBuilder.buildStyle rootDir outputDir
 
