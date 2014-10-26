@@ -37,7 +37,7 @@ type ContentParser () =
                             anyChar 
                             (lookAhead (str "#]"))
                         )
-                    ) |>> (fun x -> "")
+                    ) |>> (fun _ -> "")
                 attempt 
                     (manyCharsTill 
                         anyChar 

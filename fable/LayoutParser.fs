@@ -6,7 +6,6 @@ open System
 open ParserHelpers
 
 type LayoutParser (layout:string) =
-    let _content = ""
 
     //Fable tags in EBNF
     // fableTagKeyword = "content";
@@ -18,30 +17,44 @@ type LayoutParser (layout:string) =
     //               | (openSquare + nonHash + { anyChar })
     // line = { fableTag | nonFableTag }
 
-    let contentKeywordParser =
+    let contentKey =
         str "content"
-        
-    let fableKeywordParser content = 
-        [
-            contentKeywordParser |>> (fun tag -> content)
-        ]
-        |> choice
+
+    let titleKey =
+        str "title"
+
+    let dateKey =
+        str "date"
 
     let startTagParser =
         str "[#"
 
     let endTagParser = 
         str "#]"
+        
+    let fablePostKeys title date content = 
+        [
+            titleKey |>> (fun _ -> title)
+            dateKey |>> (fun _ -> date)
+            contentKey |>> (fun _ -> content)
+        ]
+        |> choice
 
-    let fableTagParser content = 
-        startTagParser >>. spaces >>. (fableKeywordParser content) .>> spaces .>> endTagParser
+    let fablePageKeys content = 
+        [
+            contentKey |>> (fun _ -> content)
+        ]
+        |> choice
+
+    let fableTagParser keywordParser = 
+        startTagParser >>. spaces >>. keywordParser .>> spaces .>> endTagParser
 
     let upToTagStartParser =
         charsTillString "[#" false 1000
 
-    let parseRouting content =
+    let parseRouting keywordParser =
         [
-            attempt (fableTagParser content)
+            attempt (fableTagParser keywordParser)
             attempt startTagParser
             attempt upToTagStartParser
             restOfLine true
@@ -49,7 +62,24 @@ type LayoutParser (layout:string) =
         |> choice
 
     member this.compile content =
-        let _content = content
-        let fableParser = manyTill (parseRouting content) eof
+
+        let keyParser = fablePageKeys content
+
+        let fableParser = parseManyTillEof 
+                            (parseRouting keyParser)
+
+        let result = run fableParser layout
+        resolveResult result |> List.reduce (fun a b -> a + "\n" + b)
+
+    member this.compilePost title (date:DateTime) content =
+
+        let keyParser = fablePostKeys 
+                            title
+                            (date.ToShortDateString())
+                            (content.ToString())
+
+        let fableParser = parseManyTillEof 
+                            (parseRouting keyParser) 
+
         let result = run fableParser layout
         resolveResult result |> List.reduce (fun a b -> a + "\n" + b)

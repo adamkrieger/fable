@@ -48,7 +48,10 @@ type PostBuilder () =
                 match blogPostPartial.Content with
                         | CommonMarkContent x -> commonMarkParser.compile x
                         | HtmlContent x -> x
-                |> layoutParser.compile
+                |> (layoutParser.compilePost 
+                        blogPostPartial.Title
+                        blogPostPartial.PublishDate
+                   )
 
 
         BlogPost.create 

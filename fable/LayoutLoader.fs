@@ -2,10 +2,13 @@
 
     open FileSystem
 
-    let getLayoutFilePath rootDir themeName =
-        combinePaths [| rootDir; "themes"; "default"; "layout.html" |]
+    let getLayoutFilePath rootDir themeName layoutName =
+        combinePaths [| rootDir; "themes"; themeName; layoutName |]
 
-    let getDefaultLayoutTemplate rootDir =
-        getLayoutFilePath rootDir "default" 
+    let getPageLayout rootDirectory themeName =
+        getLayoutFilePath rootDirectory "default" "layout.html"
             |> getFileContents 
 
+    let getPostLayout rootDirectory themeName = 
+        getLayoutFilePath rootDirectory "default" "post.html"
+            |> getFileContents
