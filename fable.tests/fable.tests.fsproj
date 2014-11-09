@@ -55,10 +55,8 @@
   <ItemGroup>
     <Compile Include="TestHelpers.fs" />
     <Compile Include="LayoutTests.fs" />
-    <Compile Include="PostLoaderTests.fs" />
     <Compile Include="LayoutParserTests.fs" />
     <Compile Include="CommonMark.Tests.fs" />
-    <Compile Include="PostBuilder.Tests.fs" />
     <None Include="Script.fsx" />
     <None Include="packages.config" />
     <None Include="app.config" />

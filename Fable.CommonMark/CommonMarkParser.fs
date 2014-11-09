@@ -23,48 +23,37 @@ type CommonMarkParser () =
         ]
         |> choice
 
-    let preprocessor input =
-        [
-            attempt (tab |>> (fun x -> "    "))
-            anyChar |>> (fun x -> x.ToString())
-        ]
-        |> choice
-            |> iterateParserUntilEndAndResolve <| input
 
-    let horizontalRule input =
-        let horizontalRuleSequence =
-                zeroToThreeSpaces 
-            >>.
-                ([
-                    pstring "---"
-                    pstring "___"
-                    pstring "***"
-                ]
-                |> choice)
-            .>>
-                restOfLine true
-
-        [
-            attempt horizontalRuleSequence
-                |>> (fun x -> "<hr />")
-            restOfLine true
-        ]
-        |> choice
-            |> iterateParserUntilEndAndResolve <| input
 
     let wrapInTag tag input =
         "<" + tag + ">" + input + "</" + tag + ">"
 
-    let atxHeader input =
+    let horizontalRuleSequence =
+        zeroToThreeSpaces 
+        >>.
+            ([
+                pstring "---"
+                pstring "___"
+                pstring "***"
+            ]
+            |> choice)
+        .>>
+            restOfLine true
+
+    let horizontalRuleCompile input=
+        @"<hr />"
+
+    let attemptHeader hN =
+        attempt hN >>. space >>. restOfLine true
+
+    let atxHeaderSequence =
+
         let h1 = pstring "#"
         let h2 = pstring "##"
         let h3 = pstring "###"
         let h4 = pstring "####"
         let h5 = pstring "#####"
         let h6 = pstring "######"
-
-        let attemptHeader hN =
-            attempt hN >>. space >>. restOfLine true
 
         [
             attemptHeader h6
@@ -79,10 +68,10 @@ type CommonMarkParser () =
                 |>> wrapInTag "h2"
             attemptHeader h1
                 |>> wrapInTag "h1"
-            restOfLine true
         ]
         |> choice
-            |> iterateParserUntilEndAndResolve <| input
+
+
 
     let wrapInCodeTag lang code =
         match lang with
@@ -99,30 +88,41 @@ type CommonMarkParser () =
                 |> choice)
             )
 
-    let fencedCodeBlock input =
-        let fence = pstring "```"
-        
-        let codeBlock = 
-                fence
-            >>.
-                ([
-                    oneWord .>> restOfLine true
-                    nothingAtAll
-                ]
-                |> choice)
-            .>>.
-                manyCharsTill anyChar (lookAhead fence)
-            .>>
-                fence
+    let codeBlockFence = pstring "```"
+    
+    let codeBlock = 
+            codeBlockFence
+        >>.
+            ([
+                oneWord .>> restOfLine true
+                nothingAtAll
+            ]
+            |> choice)
+        .>>.
+            manyCharsTill anyChar (lookAhead codeBlockFence)
+        .>>
+            codeBlockFence
 
+    let preprocessor input =
         [
+            attempt (tab |>> (fun x -> "    "))
+            anyChar |>> (fun x -> x.ToString())
+        ]
+        |> choice
+        |> iterateParserUntilEndAndResolve <| input
+
+    let mainRouting input = 
+        [
+            attempt horizontalRuleSequence
+                |>> horizontalRuleCompile
+            attempt atxHeaderSequence
             attempt codeBlock
                 |>> (fun output -> wrapInCodeTag (fst output) (snd output))
                 |>> wrapInTag "pre"
             restOfLine true
         ]
         |> choice
-            |> iterateParserUntilEndAndResolve <| input
+        |> iterateParserUntilEndAndResolve <| input
 
     member this.compile input = 
         let rejoin = List.reduce (fun a b -> a + b)
@@ -131,13 +131,7 @@ type CommonMarkParser () =
         let res = preprocessor input 
                     |> rejoin
 
-        let res = horizontalRule res 
-                    |> rejoinLines
-
-        let res = atxHeader res 
-                    |> rejoinLines
-
-        let res = fencedCodeBlock res 
+        let res = mainRouting res
                     |> rejoinLines
 
         res
