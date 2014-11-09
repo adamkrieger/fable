@@ -12,7 +12,7 @@ type ``When the content contains tabs`` () =
 
     [<Test>] member x.
      ``The tabs should be replaced with four spaces`` () =
-        output |> should equal "This is some     content\nAnd    some more."
+        output |> should equal "<p>This is some     content\nAnd    some more.</p>"
 
 [<TestFixture>]
 type ``When parsing a leaf block`` () =
@@ -55,3 +55,34 @@ FROM
         "```\nstuff\n```"
             |> parser.compile
             |> should equal ("<pre><code>stuff\n</code></pre>".Replace("\r\n","\n"))
+
+[<TestFixture>]
+type ``When parsing a paragraph`` () =
+
+    let parser = new CommonMark.CommonMarkParser()
+
+    [<Test>] member x.
+     ``Blank lines do not turn into paragraphs`` () =
+        @"
+
+"
+            |> parser.compile
+            |> should equal @"
+"
+
+    [<Test>] member x.
+     ``Content lines turn into paragraphs`` () =
+        @"This is a paragraph"
+            |> parser.compile
+            |> should equal @"<p>This is a paragraph</p>"
+
+    [<Test>] member x.
+     ``Multiline with space returns two paragraphs`` () =
+        @"p1
+
+p2"
+            |> parser.compile
+            |> should equal @"<p>p1</p>
+
+<p>p2</p>"
+        

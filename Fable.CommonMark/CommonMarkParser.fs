@@ -3,6 +3,9 @@
 open FParsec
 open ParserHelpers
 
+type Tag = string
+type Input = string
+
 type CommonMarkParser () =
 
     let space = pstring " "
@@ -25,28 +28,28 @@ type CommonMarkParser () =
 
 
 
-    let wrapInTag tag input =
+    let wrapInTag (tag:Tag) (input:Input) =
         "<" + tag + ">" + input + "</" + tag + ">"
 
-    let horizontalRuleSequence =
-        zeroToThreeSpaces 
-        >>.
-            ([
-                pstring "---"
-                pstring "___"
-                pstring "***"
-            ]
-            |> choice)
-        .>>
-            restOfLine true
-
-    let horizontalRuleCompile input=
-        @"<hr />"
+    let horizontalRule =
+        let parser = zeroToThreeSpaces 
+                    >>.
+                        ([
+                            pstring "---"
+                            pstring "___"
+                            pstring "***"
+                        ]
+                        |> choice)
+                    .>>
+                        restOfLine true
+        
+        parser
+        |>> (fun input -> @"<hr />")
 
     let attemptHeader hN =
         attempt hN >>. space >>. restOfLine true
 
-    let atxHeaderSequence =
+    let atxHeader =
 
         let h1 = pstring "#"
         let h2 = pstring "##"
@@ -71,8 +74,6 @@ type CommonMarkParser () =
         ]
         |> choice
 
-
-
     let wrapInCodeTag lang code =
         match lang with
         | "" -> wrapInTag "code" code
@@ -91,17 +92,48 @@ type CommonMarkParser () =
     let codeBlockFence = pstring "```"
     
     let codeBlock = 
-            codeBlockFence
-        >>.
-            ([
-                oneWord .>> restOfLine true
-                nothingAtAll
-            ]
-            |> choice)
-        .>>.
-            manyCharsTill anyChar (lookAhead codeBlockFence)
-        .>>
-            codeBlockFence
+
+        let parser = codeBlockFence
+                        >>.
+                            ([
+                                oneWord .>> restOfLine true
+                                nothingAtAll
+                            ]
+                            |> choice)
+                        .>>.
+                            manyCharsTill anyChar (lookAhead codeBlockFence)
+                        .>>
+                            codeBlockFence
+
+        parser                                
+        |>> (fun output -> wrapInCodeTag (fst output) (snd output))
+        |>> wrapInTag "pre"
+
+    let newLineOrEof =
+        newline
+            |>> (fun x -> x.ToString()) 
+        <|> 
+            (eof |>> (fun x -> ""))
+
+    let blankLine = 
+        manyCharsTill (anyOf " \t") newline
+
+    let blankLineOrEof =
+        blankLine <|> (eof |>> (fun x -> ""))
+
+    let upToNewLine =
+        //Many characters until end of line
+        //At least one character must be a non-whitespace
+        manyCharsTill anyChar newline
+
+    let paragraph =
+        [
+            attempt blankLine
+            many1Till (restOfLine true) (lookAhead blankLineOrEof)
+                |>> List.reduce (fun a b -> a + "\n" + b)
+                |>> wrapInTag "p"
+        ]
+        |> choice
 
     let preprocessor input =
         [
@@ -113,12 +145,11 @@ type CommonMarkParser () =
 
     let mainRouting input = 
         [
-            attempt horizontalRuleSequence
-                |>> horizontalRuleCompile
-            attempt atxHeaderSequence
+            attempt blankLine
+            attempt horizontalRule
+            attempt atxHeader
             attempt codeBlock
-                |>> (fun output -> wrapInCodeTag (fst output) (snd output))
-                |>> wrapInTag "pre"
+            attempt paragraph
             restOfLine true
         ]
         |> choice
@@ -131,8 +162,9 @@ type CommonMarkParser () =
         let res = preprocessor input 
                     |> rejoin
 
-        let res = mainRouting res
-                    |> rejoinLines
+        let res2 = mainRouting res
 
-        res
+        let res3 = res2 |> rejoinLines
+
+        res3
 
