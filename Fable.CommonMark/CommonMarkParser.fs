@@ -10,6 +10,7 @@ type CommonMarkParser () =
 
     let space = pstring " "
     let nothingAtAll = pstring ""
+    let eof_toStr = (eof |>> (fun x -> ""))
     
     let iterateParserUntilEndAndResolve parser input =
         parser
@@ -109,31 +110,41 @@ type CommonMarkParser () =
         |>> (fun output -> wrapInCodeTag (fst output) (snd output))
         |>> wrapInTag "pre"
 
-    let newLineOrEof =
-        newline
-            |>> (fun x -> x.ToString()) 
-        <|> 
-            (eof |>> (fun x -> ""))
-
     let blankLine = 
         manyCharsTill (anyOf " \t") newline
 
-    let blankLineOrEof =
-        blankLine <|> (eof |>> (fun x -> ""))
+    let startOfUnorderedListItem = 
+        zeroToThreeSpaces >>. pstring "*"
 
-    let upToNewLine =
-        //Many characters until end of line
-        //At least one character must be a non-whitespace
-        manyCharsTill anyChar newline
-
-    let paragraph =
+    let endOfParagraph =
         [
-            attempt blankLine
-            many1Till (restOfLine true) (lookAhead blankLineOrEof)
-                |>> List.reduce (fun a b -> a + "\n" + b)
-                |>> wrapInTag "p"
+            attempt blankLine 
+            attempt startOfUnorderedListItem
+            attempt eof_toStr
         ]
         |> choice
+
+    let unorderedListItem =
+        startOfUnorderedListItem >>. space >>. restOfLine true
+        |>> wrapInTag "li"
+
+    let endOfUnorderedList =
+        [
+            attempt blankLine
+            attempt eof_toStr
+        ]
+        |> choice
+
+    let unorderedList = 
+        many1Till unorderedListItem endOfUnorderedList
+            |>> List.reduce (fun a b -> a + "\n" + b)
+            |>> (fun input -> "\n" + input + "\n")
+            |>> wrapInTag "ul"
+
+    let paragraph =
+        many1Till (restOfLine true) (lookAhead endOfParagraph)
+            |>> List.reduce (fun a b -> a + "\n" + b)
+            |>> wrapInTag "p"
 
     let preprocessor input =
         [
@@ -149,6 +160,7 @@ type CommonMarkParser () =
             attempt horizontalRule
             attempt atxHeader
             attempt codeBlock
+            attempt unorderedList
             attempt paragraph
             restOfLine true
         ]

@@ -86,3 +86,14 @@ p2"
 
 <p>p2</p>"
         
+type ``When parsing a list`` () =
+
+    let parser = new CommonMark.CommonMarkParser()
+
+    [<Test>] member x.
+     ``One unordered list item compiles correctly`` () =
+        @"* First Item"
+            |> parser.compile
+            |> should equal @"<ul>
+<li>First Item</li>
+</ul>"
