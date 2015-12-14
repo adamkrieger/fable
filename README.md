@@ -3,10 +3,6 @@ fable
 
 A static site generator written in F#.
 
-## Current Functionality
+### Status
 
-* Replaces the content tag with the content of a page
-
-## Roadmap Functionality
-
-* .md files in the posts folder will be converted from MD to HTML using CommonMark
+This project is currently inactive. I've switched to [Hugo](https://gohugo.io/) for my personal blog: [adamkrieger.ca](http://www.adamkrieger.ca).
